@@ -22,7 +22,7 @@ interface Dest {
 
 }
 const Store = ({product , setProduct}:Props) => {
-    const[cartCount , setCartCount] = useState({})
+    const[cartCount , setCartCount] = useState<Record<number, boolean>>({});
     const {isModal} = useContext(ModalContext)
     const[className , setClassName] = useState("")
      const [modal ,setModal] = useState(isModal)
@@ -40,14 +40,20 @@ const Store = ({product , setProduct}:Props) => {
 
 
      const handleAddCart = (id:number)=>{
-        const foundProduct :string[] = product.find((e :Dest)=>e.id===id)!;
+        const foundProduct : Dest | undefined = product.find((e :Dest)=>e.id===id);
         if(foundProduct){
-            const updatedProduct = {...foundProduct, buttonState : true};
-            setProduct(prevState => {
-                return prevState.map(p => p.id === id ? updatedProduct : p);
+            setCartCount(prevState => {
+                return {...prevState, [foundProduct.id]: true};
             });
         }
      }
+     const handleRemoveFromCart = (id: number) => {
+        setCartCount(prevState => {
+            const newCartCount = {...prevState};
+            delete newCartCount[id];
+            return newCartCount;
+        });
+    }
 
 
 
@@ -77,9 +83,13 @@ const Store = ({product , setProduct}:Props) => {
 </CardBody>
 <Text>{`${description.slice(0,32)}.`}</Text>
 
-{buttonState ? <span style={{marginLeft :"2rem" , marginTop:"1rem"}}><Button  sx={{mr:"3rem"}}>+</Button><Button>-</Button><br />
-<Button color="red.400" sx={{mt:"1rem"}} onClick={()=>handleAddCart(id)}>REMOVE</Button>
-</span> :<Button sx={{mt:"2rem"}} onClick={()=>handleAddCart(id)}>ADD ITEM  </Button>}
+{cartCount[id] ? <span style={{marginLeft :"2rem" , marginTop:"1rem"}}>
+    <Button  sx={{mr:"3rem"}}>+</Button>
+    <Button>-</Button>
+    <br />
+    <Button color="red.400" sx={{mt:"1rem"}} onClick={()=>handleRemoveFromCart(id)}>REMOVE</Button>
+</span> :
+<Button sx={{mt:"2rem"}} onClick={()=>handleAddCart(id)}>ADD ITEM  </Button>}
 
 {/* <Button colorScheme='red' sx={{mt:"2rem"}} onClick={()=>{handleDelete(id)}}>REMOVE</Button> */}
 
