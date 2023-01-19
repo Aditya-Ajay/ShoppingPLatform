@@ -1,26 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useEffect } from 'react';
+import ModalProvider  from './context/Modal/ModalContext';
+import { ModalContext } from './context/Modal/ModalContext';
 
-function App() {
+
+import { data } from './data/effect';
+import { Store , Navbar , Loading} from "./components /index"
+import "./App.css"
+import { useState } from 'react';
+const App:React.FC = () => {
+  const [product , setProduct] = useState<any[]>([])
+  const [loading , setLoading] = useState(true)
+  const [counter , setCounter] = useState(1)
+  const [cartAmount , setCartAmount] = useState(0)
+  useEffect(()=>{
+    data("https://dummyjson.com/products").then((e)=>{
+        setProduct(e.products)
+        setLoading(false)
+    })
+ },[])
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <ModalProvider>
+    <BrowserRouter>
+   <Navbar product={product} setProduct={setProduct} cartAmount={cartAmount} setCartAmount={setCartAmount}/>
+   {loading ? <Loading /> : 
+    <Routes>
+    <Route path="/" element={<Store product={product} setProduct={setProduct} loading={loading} setLoading={setLoading}/>} />
+    </Routes>
+}
+   
+  </BrowserRouter>
+  </ModalProvider>
+  )
 }
 
-export default App;
+export default App
