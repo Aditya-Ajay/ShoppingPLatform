@@ -11,6 +11,7 @@ import "./App.css"
 import { useState } from 'react';
 const App:React.FC = () => {
   const [product , setProduct] = useState<any[]>([])
+  const[itemCount , setitemCount] = useState<Record<number, number>>({});
   const [loading , setLoading] = useState(true)
   const [counter , setCounter] = useState(1)
   const [cartAmount , setCartAmount] = useState(0)
@@ -23,10 +24,10 @@ const App:React.FC = () => {
   return (
     <ModalProvider>
     <BrowserRouter>
-   <Navbar product={product} setProduct={setProduct} cartAmount={cartAmount} setCartAmount={setCartAmount}/>
+   <Navbar product={product} setProduct={setProduct} itemCount={itemCount} setitemCount ={setitemCount}/>
    {loading ? <Loading /> : 
     <Routes>
-    <Route path="/" element={<Store product={product} setProduct={setProduct} loading={loading} setLoading={setLoading}/>} />
+    <Route path="/" element={<Store product={product} setProduct={setProduct} loading={loading} setLoading={setLoading} itemCount={itemCount} setitemCount ={setitemCount}/>} />
     </Routes>
 }
    

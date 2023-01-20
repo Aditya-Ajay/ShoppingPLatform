@@ -5,11 +5,17 @@ import { Link } from 'react-router-dom'
 interface Prop {
     product : any[] 
     setProduct : React.Dispatch<React.SetStateAction<any[]>>
-    cartAmount : number
-    setCartAmount : React.Dispatch<React.SetStateAction<number>>
+    itemCount : Record<number, number>
+    setitemCount : React.Dispatch<React.SetStateAction<Record<number, number>>>
+  
 }
-const Navbar  = ({product , setProduct , cartAmount , setCartAmount} : Prop) => {
-
+const Navbar  = ({product , setProduct , itemCount ,setitemCount } : Prop) => {
+   
+   const handleCart = ()=>{
+    for(let key in itemCount) {
+        let  a =    console.log(itemCount[key])
+        }
+   } 
   return (
     <Box boxShadow='2xl' p='6' rounded='md' bg='white'>
               <nav>
@@ -18,7 +24,7 @@ const Navbar  = ({product , setProduct , cartAmount , setCartAmount} : Prop) => 
                 
                 <span className="material-symbols-outlined cart" >
 add_shopping_cart
-<span style={{color : "white" , position : "absolute" , bottom:"35px" , left :"30px" , fontSize :"1rem"}}>{cartAmount}</span>
+<span style={{color : "white" , position : "absolute" , bottom:"35px" , left :"30px" , fontSize :"1rem"}}>0</span>
 
 </span>
 
